@@ -1,7 +1,7 @@
 const authRouter = require("express").Router();
 const User = require("../models/User-model");
 const CryptoJS = require("crypto-js");
-
+const jwt = require("jsonwebtoken");
 authRouter.post("/register", async (req, res) => {
   const newUser = new User({
     username: req.body.username,
@@ -38,9 +38,18 @@ authRouter.post("/login", async (req, res) => {
         message: "Wrong Password",
       });
 
+    const accessToken = jwt.sign(
+      {
+        id: user._id,
+        isAdmin: user.isAdmin,
+      },
+      process.env.JWT_SECRET_KEY,
+      { expiresIn: "30d" }
+    );
+
     const { password, ...others } = user._doc;
 
-    res.status(200).json(others);
+    res.status(200).json({ ...others, accessToken });
   } catch (error) {
     res.status(500).json(error);
     console.log(error.message);
