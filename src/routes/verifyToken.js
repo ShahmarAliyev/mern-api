@@ -16,9 +16,7 @@ const verifyToken = (req, res, next) => {
 
 const verifyTokenAndAuth = (req, res, next) => {
   verifyToken(req, res, () => {
-    console.log(req.user.id, req.params.id, !req.user.isAdmin);
-    if (req.user.id === req.params.id || !req.user.isAdmin) {
-      console.log("works");
+    if (req.user.id === req.params.id || req.user.isAdmin) {
       next();
     } else {
       res.status(403).json("You are not  allowed the make changes");
@@ -26,4 +24,14 @@ const verifyTokenAndAuth = (req, res, next) => {
   });
 };
 
-module.exports = { verifyToken, verifyTokenAndAuth };
+const verifyTokenAndAdmin = (req, res, next) => {
+  verifyToken(req, res, () => {
+    if (req.user.isAdmin) {
+      next();
+    } else {
+      res.status(403).json("You are not  allowed the make changes");
+    }
+  });
+};
+
+module.exports = { verifyToken, verifyTokenAndAuth, verifyTokenAndAdmin };
