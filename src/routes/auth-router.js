@@ -14,7 +14,6 @@ authRouter.post("/register", async (req, res) => {
 
   try {
     const savedUser = await newUser.save();
-    console.log(savedUser);
     res.status(201).json(savedUser);
   } catch (error) {
     console.log(error);
@@ -32,8 +31,9 @@ authRouter.post("/login", async (req, res) => {
       process.env.PASSWORD_SECRET
     );
     const savedUserPassword = hashedPassword.toString(CryptoJS.enc.Utf8);
+    const inputPassword = req.body.password;
 
-    savedUserPassword !== req.body.password &&
+    savedUserPassword != inputPassword &&
       res.status(401).send({
         message: "Wrong Password",
       });
@@ -53,7 +53,7 @@ authRouter.post("/login", async (req, res) => {
   } catch (error) {
     res.status(500).json(error);
     console.log(error.message);
-    throw new Error();
+    // throw new Error();
   }
 });
 
