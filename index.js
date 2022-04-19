@@ -2,8 +2,13 @@ const express = require("express");
 const app = express();
 const mongoose = require("mongoose");
 const dotenv = require("dotenv");
+
 const userRouter = require("./src/routes/user-router");
+const cartRouter = require("./src/routes/cart-router");
 const authRouter = require("./src/routes/auth-router");
+const orderRouter = require("./src/routes/order-router");
+
+const productsRouter = require("./src/routes/product-router");
 
 dotenv.config();
 
@@ -19,7 +24,10 @@ mongoose
 app.use(express.json());
 app.use("/api/users", userRouter);
 app.use("/api/auth", authRouter);
+app.use("/api/products", productsRouter);
+app.use("/api/cart", cartRouter);
+app.use("/api/orders", orderRouter);
 
-app.listen(process.env.PORT || 500, () => {
+app.listen(process.env.PORT || 5000, () => {
   console.log("Backend server is running");
 });
